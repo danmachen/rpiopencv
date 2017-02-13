@@ -1,8 +1,8 @@
-
-#A starter script to load the camera module,
-#take video  and recognise a face
+#A starter script to load the camera module and recognise a face
+# puts a box around the recognised face and eyes
 
 #Author: D Machen
+
 #Date: 12/2/2017
 
 import io
@@ -13,11 +13,10 @@ import numpy
 #create memory stream so image doesnt have to be saved as jpeg
 stream = io.BytesIO()
 
-
 with picamera.PiCamera() as camera:
-	camera.resolution = (320,240)
-	camera.brightness = 60
-	camera.capture(stream, format='jpeg')
+        camera.resolution = (320,240)
+        camera.brightness = 60
+        camera.capture(stream, format='jpeg')
 
 #convert the picture into a numpy array
 buff = numpy.fromstring(stream.getvalue(), dtype=numpy.uint8)
@@ -29,14 +28,19 @@ image = cv2.imdecode(buff,1)
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 
-#convert img to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-#detect faces on grayscale image
 faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
-#Draw rectangles on the faces
+#Draw rectangles on the faces and eyes
+
 for (x,y,w,h) in faces:
-   	cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,0),2)
+
+        cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,0),2)
+        roi_gray = gray[y:y+h, x:x+w]
+        roi_color = image[y:y+h, x:x+w]
+        eyes = eye_cascade.detectMultiScale(roi_gray)
+        for(ex,ey,ew,eh) in eyes:
+                cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
 
 #print text if faces ard found
 print "Found "+str(len(faces))+" faces(s)"
