@@ -1,0 +1,12 @@
+
+
+Raspberry Pi Model B Version 1
+Raspberry Pi Camera V2
+
+OpenCv 3.2.0
+
+Lenovo Thinkpad Windows 10
+
+putty 
+
+Xming
