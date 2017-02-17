@@ -1,7 +1,7 @@
 '''
 
 A starter script to load the camera module,
-take a picture and recognise a face
+take a picture and recognise a face.
 
 Author: J Parkinson
 Date: 31/1/2017
